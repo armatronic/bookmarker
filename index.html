@@ -17,6 +17,7 @@
 
         <div id="bookmark_list">
             <a href="#" class="add">Add</a>
+            <a href="#" class="save_all">Save All Changes</a>
             <ul class="bookmarks">
                 <li class="bookmark template">
                     <form class="save_form" action="#">
@@ -29,12 +30,16 @@
                             <label>URL:</label>
                             <input name="url" />
                         </div>
+                        <div class="tag_input">
+                            <label>Tags:</label>
+                            <input name="tags" />
+                        </div>
                         <input type="submit" value="Save" class="save" id="SaveButton" />
                     </form>
                     <div class="display">
                         <a href="#" class="bookmark_link"></a>
-                        <a href="#" class="edit">Edit</a>
-                        <a href="#" class="delete">Delete</a>
+                        (Tags: <span class="tags"></span>)
+                        [<a href="#" class="edit">Edit</a>, <a href="#" class="delete">Delete</a>]
                     </div>
                 </li>
             </ul>

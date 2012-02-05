@@ -8,6 +8,7 @@
                 return {
                     label: '',
                     url:   '',
+                    tags:  [],
                     order: Bookmarks.nextOrder()
                 }
             }
@@ -35,8 +36,10 @@
         window.BookmarkerView = Backbone.View.extend({
             el: $('#bookmark_list'),
             events: {
-                'click .add'      : 'addOne',
-                'click .save_all' : 'saveAll'
+                'click .add'       : 'addOne',
+                'click .save_all'  : 'saveAll',
+                'click .tag'       : 'showForTag',
+                'click .clear_tag' : 'render'
             },
             collection: Bookmarks,
             initialize: function() {
@@ -56,6 +59,9 @@
                 //
                 // Use tiddly thing to save changes.
                 return false;
+            },
+            showForTag: function() {
+                return false;
             }
         });
         window.Bookmarker = new BookmarkerView();
@@ -69,6 +75,7 @@
             template: Bookmarker.$('.template').html(),
             events: {
                 'submit .save_form' : 'saveBookmark',
+                'click .cancel'     : 'cancelEdit',
                 'click .edit'       : 'editBookmark',
                 'click .delete'     : 'deleteBookmark'
             },
@@ -83,14 +90,24 @@
                 this_view.find('.display .bookmark_link')
                     .attr('href', this.model.get('url'))
                     .text(this.model.get('label'));
+
+                var tags = this.model.get('tags');
+                var tag_links = _.map(tags, function(tag) {
+                    return $('<a href="#" class="tag" />').text(tag).wrap('<p />').parent().html();
+                }).join(', ');
+                this_view.find('.display .tags').append(tag_links);
                 this_view.find('.label_input :input').val(this.model.get('label'));
                 this_view.find('.url_input :input').val(this.model.get('url'));
+                this_view.find('.tag_input :input').val(tags.join(' '));
                 return this;
             },
             saveBookmark: function() {
+                //
+                // Don't save the bookmark yet, but set its values.
                 this.model.set({
                     label: this.$('.label_input :input').val(),
-                    url:   this.$('.url_input :input').val()
+                    url:   this.$('.url_input :input').val(),
+                    tags:  this.$('.tag_input :input').val().split(/\s+/)
                 });
                 this.$el.removeClass('editing');
                 this.render();
@@ -99,6 +116,10 @@
             editBookmark: function() {
                 this.$el.addClass('editing');
                 this.$('.label_input :input').focus();
+                return false;
+            },
+            cancelEdit: function() {
+                this.$el.removeClass('editing');
                 return false;
             },
             deleteBookmark: function() {
