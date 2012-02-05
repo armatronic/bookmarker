@@ -35,7 +35,8 @@
         window.BookmarkerView = Backbone.View.extend({
             el: $('#bookmark_list'),
             events: {
-                'click .add' : 'addOne'
+                'click .add'      : 'addOne',
+                'click .save_all' : 'saveAll'
             },
             collection: Bookmarks,
             initialize: function() {
@@ -44,11 +45,17 @@
             },
             addOne: function() {
                 var view = new BookmarkView({model: new Bookmark()});
+                view.editBookmark();
                 this.$('.bookmarks').append(view.render().el);
                 return false;
             },
             addAll: function() {
                 Bookmarks.each(this.addOne);
+            },
+            saveAll: function() {
+                //
+                // Use tiddly thing to save changes.
+                return false;
             }
         });
         window.Bookmarker = new BookmarkerView();
@@ -59,7 +66,7 @@
          */
         window.BookmarkView = Backbone.View.extend({
             tagName: 'li',
-            template: Bookmarker.$('.template'),
+            template: Bookmarker.$('.template').html(),
             events: {
                 'submit .save_form' : 'saveBookmark',
                 'click .edit'       : 'editBookmark',
@@ -72,7 +79,7 @@
             render: function() {
                 //
                 // Set the template's contents based on what's in the model.
-                var this_view = this.$el.html(this.template.clone()).removeClass('template');
+                var this_view = this.$el.html(this.template).removeClass('template').addClass('bookmark');
                 this_view.find('.display .bookmark_link')
                     .attr('href', this.model.get('url'))
                     .text(this.model.get('label'));
@@ -81,11 +88,12 @@
                 return this;
             },
             saveBookmark: function() {
-                this.model.save({
+                this.model.set({
                     label: this.$('.label_input :input').val(),
                     url:   this.$('.url_input :input').val()
                 });
                 this.$el.removeClass('editing');
+                this.render();
                 return false;
             },
             editBookmark: function() {
