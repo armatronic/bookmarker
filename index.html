@@ -3,12 +3,13 @@
     <head>
         <title>Bookmarker</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link type="text/css" href="css/styles.css" rel="stylesheet" />
         <script type="text/javascript" src="js/libs/jquery-1.7.1.js"></script>
         <script type="text/javascript" src="js/libs/jquery.twfile.js"></script>
         <script type="text/javascript" src="js/libs/underscore-1.3.1.js"></script>
         <script type="text/javascript" src="js/libs/json2.js"></script>
         <script type="text/javascript" src="js/libs/backbone-0.9.1.js"></script>
-        
+
         <script type="text/javascript" src="js/bookmarker.js"></script>
     </head>
     <body>
@@ -17,7 +18,7 @@
         <div id="bookmark_list">
             <a href="#" class="add">Add</a>
             <ul class="bookmarks">
-                <li class="template">
+                <li class="bookmark template">
                     <form class="save_form" action="#">
                         <input type="hidden" name="id" />
                         <div class="label_input">
@@ -38,6 +39,7 @@
                 </li>
             </ul>
             <a href="#" class="add">Add</a>
+            <a href="#" class="save_all">Save All Changes</a>
         </div>
     </body>
 </html>

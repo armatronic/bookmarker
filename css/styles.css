@@ -1,0 +1,32 @@
+/*
+    Document   : styles.css
+    Created on : 05/02/2012, 11:16:25 AM
+    Author     : armatron
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/*
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+root {
+    display: block;
+}
+
+#bookmark_list .bookmark.template {
+    display: none;
+}
+#bookmark_list .bookmark .display {
+    display: inherit;
+}
+#bookmark_list .bookmark.editing .display {
+    display: none;
+}
+#bookmark_list .bookmark .save_form {
+    display: none;
+}
+#bookmark_list .bookmark.editing .save_form {
+    display: inherit;
+}
