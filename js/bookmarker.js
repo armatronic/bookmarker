@@ -73,13 +73,13 @@
             },
             saveBookmark: function() {
                 //
-                // Don't save the bookmark yet, but set its values.
+                // Don't save the bookmark yet, but set its values?
                 this.model.set({
                     label: this.$('.label_input :input').val(),
                     url:   this.$('.url_input :input').val(),
                     tags:  this.$('.tag_input :input').val().split(/\s+/)
                 });
-//                this.model.save();
+                this.model.save();
                 this.$el.removeClass('editing');
                 this.render();
                 return false;
@@ -119,11 +119,13 @@
                 this.collection.fetch();
             },
             add: function() {
-                this.collection.create({});
+                this.collection.add({});
             },
             addOne: function(bookmark) {
                 var view = new BookmarkView({model: bookmark});
-                view.editBookmark();
+                if (bookmark.isNew()) {
+                    view.editBookmark();
+                }
                 this.$('.bookmarks').append(view.render().el);
                 return false;
             },
@@ -133,7 +135,9 @@
             saveAll: function() {
                 //
                 // Use tiddly thing to save changes.
-//                this.collection.save();
+//                this.collection.each(function(bookmark) {
+//                    bookmark.save();
+//                })
                 return false;
             },
             showForTag: function() {
