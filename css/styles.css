@@ -14,7 +14,24 @@
 root {
     display: block;
 }
+body {
+    font-size: 12px;
+    font-family: Helvetical, Arial, sans-serif;
+}
 
+#bookmark_list .bookmarks {
+    padding: 0;
+}
+#bookmark_list .bookmark {
+    list-style-type: none;
+    padding: 3px;
+    background-color: #FFFDFA;
+    border: 1px solid #EFEDEA;
+    display: inline-block;
+    margin: 3px;
+    border-radius: 10px;
+    vertical-align: top;
+}
 #bookmark_list .bookmark.template {
     display: none;
 }
@@ -29,4 +46,66 @@ root {
 }
 #bookmark_list .bookmark.editing .save_form {
     display: inherit;
+}
+
+/** Button styles. **/
+#bookmark_list .button {
+    background-color: transparent;
+    background-position: 2px center;
+    background-repeat: no-repeat;
+    display: inline-block;
+    padding: 3px;
+    line-height: 18px;
+    padding-left: 20px;
+    border: 1px solid #00007F;
+    font-weight: bold;
+    font-family: Helvetical, Arial, sans-serif;
+    font-size: 12px;
+    color: white;
+    background-color: #0000FF;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: normal;
+    text-align: center;
+    border-radius: 5px;
+    margin: 1px;
+}
+/** Required so that Firefox renders buttons as expected. **/
+#bookmark_list .button::-moz-focus-inner {
+    padding: 1px 0;
+}
+
+#bookmark_list .button.add {
+    background-image: url(../img/add.png);
+}
+#bookmark_list .button.edit {
+    background-image: url(../img/link_edit.png);
+}
+#bookmark_list .button.delete {
+    background-image: url(../img/delete.png);
+}
+#bookmark_list .button.delete {
+    background-image: url(../img/delete.png);
+    background-color: #FF0000;
+    border-color: #7F0000;
+}
+#bookmark_list .button.save {
+    background-image: url(../img/accept.png);
+}
+#bookmark_list .button.cancel {
+    background-image: url(../img/cancel.png);
+}
+#bookmark_list .button.bookmark_link {
+    background-image: url(../img/link_go.png);
+    background-color: #00FF00;
+    border-color: #007F00;
+}
+#bookmark_list .button.tag {
+    background-image: url(../img/tag_blue.png);
+    background-color: #DFDFDF;
+    border-color: #AFAFAF;
+    color: black;
+}
+#bookmark_list .button.tag.template {
+    display: none;
 }

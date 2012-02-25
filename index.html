@@ -14,10 +14,9 @@
         <script type="text/javascript" src="js/bookmarker.js"></script>
     </head>
     <body>
-        <h1>Bookmarks</h1>
 
         <div id="bookmark_list">
-            <a href="#" class="add">Add</a>
+            <h1>Bookmarks</h1><a href="#" class="button add">Add</a>
             <ul class="bookmarks">
                 <li class="bookmark template">
                     <form class="save_form" action="#">
@@ -34,16 +33,21 @@
                             <label>Tags:</label>
                             <input name="tags" />
                         </div>
-                        <input type="submit" value="Save" class="save" id="SaveButton" />
+                        <input type="submit" value="Save" class="button save" id="SaveButton" />
+                        <a href="#" class="button cancel">Cancel</a>
                     </form>
                     <div class="display">
-                        <a href="#" class="bookmark_link"></a>
-                        (Tags: <span class="tags"></span>)
-                        [<a href="#" class="edit">Edit</a>, <a href="#" class="delete">Delete</a>]
+                        <div class="main">
+                            <a href="#" class="button bookmark_link"></a>
+                            <span class="tags">
+                                <a href="#" class="button tag template"></a>
+                            </span>
+                        </div>
+                        <a href="#" class="button edit">Edit</a>
+                        <a href="#" class="button delete">Delete</a>
                     </div>
                 </li>
             </ul>
-            <a href="#" class="add">Add</a>
         </div>
     </body>
 </html>
