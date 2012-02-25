@@ -61,10 +61,11 @@
                     .attr('href', this.model.get('url'))
                     .text(this.model.get('label'));
 
-                var tags = this.model.get('tags');
-                var tag_links = _.map(tags, function(tag) {
-                    return $('<a href="#" class="tag" />').text(tag).wrap('<p />').parent().html();
-                }).join(', ');
+                var tags         = this.model.get('tags');
+                var tag_template = this.$el.find('.button.tag.template');
+                var tag_links    = _.map(tags, function(tag) {
+                    return tag_template.clone().removeClass('template').text(tag).get(0);
+                });
                 this.$('.display .tags').empty().append(tag_links);
                 this.$('.label_input :input').val(this.model.get('label'));
                 this.$('.url_input :input').val(this.model.get('url'));
@@ -90,7 +91,12 @@
                 return false;
             },
             cancelEdit: function() {
-                this.$el.removeClass('editing');
+                if (this.model.isNew()) {
+                    this.remove();
+                }
+                else {
+                    this.$el.removeClass('editing');
+                }
                 return false;
             },
             deleteBookmark: function() {
@@ -120,6 +126,7 @@
             },
             add: function() {
                 this.collection.add({});
+                return false;
             },
             addOne: function(bookmark) {
                 var view = new BookmarkView({model: bookmark});
