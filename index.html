@@ -16,7 +16,20 @@
     <body>
 
         <div id="bookmark_list">
-            <h1>Bookmarks</h1><a href="#" class="button add">Add</a>
+            <h1>Bookmarks</h1>
+
+            <form class="current_tag_display" action="#">
+                Showing tags:
+                <span class="no_tags_label">None</span>
+                <span class="current_tag_container">
+                    <a href="#" class="button shown_tag template" title="Remove this tag from filter"></a>
+                </span>
+                <input type="text" class="tag_selector autocomplete" name="selected_tag" />
+                <!--<input type="submit" value="Add" class="button add" />-->
+            </form>
+
+            <a href="#" class="button add">Add Bookmark</a>
+
             <ul class="bookmarks">
                 <li class="bookmark template">
                     <form class="save_form" action="#">

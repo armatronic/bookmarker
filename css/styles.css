@@ -109,3 +109,26 @@ body {
 #bookmark_list .button.tag.template {
     display: none;
 }
+#bookmark_list .button.shown_tag {
+    background-image: url(../img/tag_blue.png);
+    background-color: #DFDFDF;
+    border-color: #AFAFAF;
+    color: black;
+}
+#bookmark_list .button.shown_tag:hover {
+    background-image: url(../img/tag_blue_delete.png);
+    background-color: #FF0000;
+    border-color: #7F0000;
+    color: white;
+}
+#bookmark_list .button.shown_tag.template {
+    display: none;
+}
+
+/** Styles for tagging **/
+#bookmark_list .current_tag_display .no_tags_label {
+    display: none;
+}
+#bookmark_list .current_tag_display.empty .no_tags_label {
+    display: inherit;
+}

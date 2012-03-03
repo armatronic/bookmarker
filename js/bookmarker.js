@@ -11,6 +11,18 @@
                     tags:  [],
                     order: Bookmarks.nextOrder()
                 }
+            },
+            is_displayed: true,
+            setAsDisplayed: function() {
+                this.is_displayed = true;
+                this.change();
+            },
+            setAsHidden: function() {
+                this.is_displayed = false;
+                this.change();
+            },
+            isHidden: function() {
+                return !(this.is_displayed);
             }
         });
 
@@ -40,12 +52,13 @@
          */
         window.BookmarkView = Backbone.View.extend({
             tagName: 'li',
-            template: $('#bookmark_list .template').html(),
+            template: $('#bookmark_list .bookmark.template').html(),
             events: {
                 'submit .save_form' : 'saveBookmark',
                 'click .cancel'     : 'cancelEdit',
                 'click .edit'       : 'editBookmark',
-                'click .delete'     : 'deleteBookmark'
+                'click .delete'     : 'deleteBookmark',
+                'change'            : 'render'
             },
             initialize: function() {
                 this.model.on('change',  this.render, this);
@@ -70,6 +83,12 @@
                 this.$('.label_input :input').val(this.model.get('label'));
                 this.$('.url_input :input').val(this.model.get('url'));
                 this.$('.tag_input :input').val(tags.join(' '));
+                if (this.model.isHidden()) {
+                    this.$el.hide();
+                }
+                else {
+                    this.$el.show();
+                }
                 return this;
             },
             saveBookmark: function() {
@@ -114,15 +133,47 @@
             el: $('#bookmark_list'),
             events: {
                 'click .add'       : 'add',
-                'click .save_all'  : 'saveAll',
-                'click .tag'       : 'showForTag',
-                'click .clear_tag' : 'render'
+                'click .tag'       : 'showForTagEvent',
+                'click .clear_tag' : 'clearAllShownTags',
+                'click .shown_tag' : 'clearForTagEvent',
+                'change'           : 'render'
             },
+            shown_tags: [],
             collection: Bookmarks,
             initialize: function() {
                 this.collection.on('add',   this.addOne, this);
                 this.collection.on('reset', this.addAll, this);
                 this.collection.fetch();
+                this.render();
+            },
+            render: function() {
+                var tag_display   = this.$('.current_tag_display');
+                var tag_links     = [];
+                var tag_template  = tag_display.find('.shown_tag.template');
+                var tag_container = tag_display.find('.current_tag_container');
+                if (_.isEmpty(this.shown_tags)) {
+                    tag_display.addClass('empty');
+                }
+                else {
+                    tag_display.removeClass('empty');
+                    tag_links = _.map(this.shown_tags, function(tag) {
+                        return tag_template.clone().removeClass('template').text(tag).get(0);
+                    });
+                }
+                tag_container.children().not('.template').remove();
+                tag_container.append(tag_links);
+
+                //
+                // Set whether a post is shown based on the shown tags.
+                var shown_tags = this.shown_tags;
+                Bookmarks.each(function(bookmark) {
+                    if (_.isEmpty(shown_tags) || !_.isEmpty(_.intersection(shown_tags, bookmark.get('tags')))) {
+                        bookmark.setAsDisplayed();
+                    }
+                    else {
+                        bookmark.setAsHidden();
+                    }
+                });
             },
             add: function() {
                 this.collection.add({});
@@ -139,16 +190,26 @@
             addAll: function() {
                 Bookmarks.each(this.addOne);
             },
-            saveAll: function() {
-                //
-                // Use tiddly thing to save changes.
-//                this.collection.each(function(bookmark) {
-//                    bookmark.save();
-//                })
+            showForTagEvent: function(event) {
+                this.addShownTag($(event.target).text());
                 return false;
             },
-            showForTag: function() {
+            clearForTagEvent: function(event) {
+                this.clearForTag($(event.target).text());
                 return false;
+            },
+            clearAllShownTags: function() {
+                return false;
+            },
+            addShownTag: function(tag) {
+                if (!_.contains(this.shown_tags, tag)) {
+                    this.shown_tags.push(tag);
+                }
+                this.render();
+            },
+            clearForTag: function(tag) {
+                this.shown_tags = _.without(this.shown_tags, tag);
+                this.render();
             }
         });
         window.Bookmarker = new BookmarkerView();
