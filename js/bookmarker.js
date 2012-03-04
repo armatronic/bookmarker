@@ -15,11 +15,11 @@
             is_displayed: true,
             setAsDisplayed: function() {
                 this.is_displayed = true;
-                this.change();
+                this.trigger('change_display');
             },
             setAsHidden: function() {
                 this.is_displayed = false;
-                this.change();
+                this.trigger('change_display');
             },
             isHidden: function() {
                 return !(this.is_displayed);
@@ -54,15 +54,19 @@
             tagName: 'li',
             template: $('#bookmark_list .bookmark.template').html(),
             events: {
-                'submit .save_form' : 'saveBookmark',
-                'click .cancel'     : 'cancelEdit',
-                'click .edit'       : 'editBookmark',
-                'click .delete'     : 'deleteBookmark',
-                'change'            : 'render'
+                'submit .save_form'   : 'saveBookmark',
+                'click .cancel'       : 'cancelEdit',
+                'click .edit'         : 'editBookmark',
+                'click .delete'       : 'deleteBookmark'
             },
             initialize: function() {
                 this.model.on('change',  this.render, this);
                 this.model.on('destroy', this.remove, this);
+                //
+                // change_display is triggered when a tag is switched on or off.
+                this.model.on('change_display', this.render, this);
+                //
+                // The view is set into the model, so the render() method can
             },
             render: function() {
                 //
@@ -74,12 +78,19 @@
                     .attr('href', this.model.get('url'))
                     .text(this.model.get('label'));
 
+                //
+                // Set up display of tags.
                 var tags         = this.model.get('tags');
                 var tag_template = this.$el.find('.button.tag.template');
                 var tag_links    = _.map(tags, function(tag) {
                     return tag_template.clone().removeClass('template').text(tag).get(0);
                 });
-                this.$('.display .tags').empty().append(tag_links);
+
+                //
+                // Clear out any tags that aren't the template, and add them
+                // back in.
+                this.$('.display .tags').children().not('.template').remove();
+                this.$('.display .tags').append(tag_links);
                 this.$('.label_input :input').val(this.model.get('label'));
                 this.$('.url_input :input').val(this.model.get('url'));
                 this.$('.tag_input :input').val(tags.join(' '));
@@ -135,8 +146,7 @@
                 'click .add'       : 'add',
                 'click .tag'       : 'showForTagEvent',
                 'click .clear_tag' : 'clearAllShownTags',
-                'click .shown_tag' : 'clearForTagEvent',
-                'change'           : 'render'
+                'click .shown_tag' : 'clearForTagEvent'
             },
             shown_tags: [],
             collection: Bookmarks,
