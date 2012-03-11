@@ -161,7 +161,6 @@
          * A view for a list of bookmarks.
          */
         window.BookmarkerView = Backbone.View.extend({
-            el: $('#bookmark_list'),
             events: {
                 'click .add'       : 'add',
                 'click .tag'       : 'showForTagEvent',
@@ -209,7 +208,10 @@
                 return false;
             },
             addOne: function(bookmark) {
-                var view = new BookmarkView({model: bookmark});
+                var view = new BookmarkView({
+                    model:    bookmark
+//                    ,template: this.$('.bookmark.template').html()
+                });
                 if (bookmark.isNew()) {
                     view.editBookmark();
                 }
@@ -241,11 +243,33 @@
                 this.render();
             }
         });
-
-        window.Bookmarks  = new BookmarkList(
-            {},
-            {file_path: document.location.href.replace(/([\///])[^\///]+$/i, '$1items.json')}
-        );
-        window.Bookmarker = new BookmarkerView({collection: Bookmarks});
     });
+
+    /**
+     * Add a jQuery plugin for setting up the bookmarker.
+     */
+    $.fn.bookmarker = function(options) {
+        //
+        // Plugin methods:
+        // init
+
+        //
+        // Plugin options:
+        // file_path
+        $.extend(
+            {file_path: 'items.json'},
+            options
+        );
+        bookmarks = new BookmarkList(
+            {},
+            {file_path: document.location.href.replace(/([\///])[^\///]+$/i, '$1'+String(options.file_path))}
+        );
+        this.data(
+            'bookmarker',
+            new BookmarkerView({
+                el:         this,
+                collection: bookmarks
+            })
+        );
+    };
 })(jQuery);
