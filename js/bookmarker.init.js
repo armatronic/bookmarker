@@ -1,4 +1,4 @@
-var window = window || {};
+/*jslint browser: true, unparam: true, vars: true, white: true, nomen: true, maxerr: 50, indent: 4 */
 (function ($) {
     "use strict";
     $(function () {
