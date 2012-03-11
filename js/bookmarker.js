@@ -43,11 +43,19 @@
         /**
          * Bookmark collection - should save bookmarks to a local file.
          */
-        var file_path = document.location.href.replace(/([\///])[^\///]+$/i, '$1items.json');
-//        file_path     = $.twFile.convertUriToLocalPath(file_path);
         window.BookmarkList = Backbone.Collection.extend({
             model: Bookmark,
-            fileStorage: new FileStore($.twFile.convertUriToLocalPath(file_path)),
+            initialize: function(models, options) {
+                try {
+                    this.file_path   = options.file_path;
+                    this.fileStorage = new FileStore(
+                        $.twFile.convertUriToLocalPath(this.file_path)
+                    );
+                }
+                catch (ex) {
+                    $.error('File storage could not be initialised.');
+                }
+            },
             comparator: function(bookmark) {
                 return bookmark.get('order')
             },
@@ -57,7 +65,6 @@
                 return this.length + 1;
             }
         });
-        window.Bookmarks = new BookmarkList();
 
 
         /**
@@ -234,6 +241,11 @@
                 this.render();
             }
         });
+
+        window.Bookmarks  = new BookmarkList(
+            {},
+            {file_path: document.location.href.replace(/([\///])[^\///]+$/i, '$1items.json')}
+        );
         window.Bookmarker = new BookmarkerView({collection: Bookmarks});
     });
 })(jQuery);
