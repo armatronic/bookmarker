@@ -149,7 +149,6 @@
                 'click .shown_tag' : 'clearForTagEvent'
             },
             shown_tags: [],
-            collection: Bookmarks,
             initialize: function() {
                 this.collection.on('add',   this.addOne, this);
                 this.collection.on('reset', this.addAll, this);
@@ -176,7 +175,7 @@
                 //
                 // Set whether a post is shown based on the shown tags.
                 var shown_tags = this.shown_tags;
-                Bookmarks.each(function(bookmark) {
+                this.collection.each(function(bookmark) {
                     if (_.isEmpty(shown_tags) || !_.isEmpty(_.intersection(shown_tags, bookmark.get('tags')))) {
                         bookmark.setAsDisplayed();
                     }
@@ -198,7 +197,7 @@
                 return false;
             },
             addAll: function() {
-                Bookmarks.each(this.addOne);
+                this.collection.each(this.addOne);
             },
             showForTagEvent: function(event) {
                 this.addShownTag($(event.target).text());
@@ -222,6 +221,6 @@
                 this.render();
             }
         });
-        window.Bookmarker = new BookmarkerView();
+        window.Bookmarker = new BookmarkerView({collection: Bookmarks});
     });
 })(jQuery);
