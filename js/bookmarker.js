@@ -4,12 +4,25 @@
          * Bookmark model.
          */
         window.Bookmark = Backbone.Model.extend({
+            initialize: function() {
+                //
+                // Change event: sets the order of this model instance, if this
+                // is a new item. (Called here as it requires the collection of
+                // this model to be known.)
+                this.on('change', function() {
+                    if (this.isNew()) {
+                        this.set(
+                            {order: this.collection.nextOrder()},
+                            {silent: true}
+                        );
+                    }
+                }, this);
+            },
             defaults: function() {
                 return {
                     label: '',
                     url:   '',
-                    tags:  [],
-                    order: Bookmarks.nextOrder()
+                    tags:  []
                 }
             },
             is_displayed: true,
