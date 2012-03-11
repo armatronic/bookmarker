@@ -257,9 +257,21 @@
             {file_path: 'items.json'},
             options
         );
+
+        //
+        // Split the doc location into paths, and treat options.file_path as
+        // relative.
+        // If location is a file and not a directory, then treat file path as
+        // relative to the directory the document location is in.
+        var this_path_parts = document.location.href.split(/([\\\/]+)/i);
+        var last_part       = _.last(this_path_parts);
+        if (!last_part.match(/\\\//)) {
+            this_path_parts = _.initial(this_path_parts);
+        }
+        var base_path = this_path_parts.join('');
         var bookmarks = new BookmarkList(
             {},
-            {file_path: document.location.href.replace(/([\\\/])[^\\\/]+$/i, '$1'+String(options.file_path))}
+            {file_path: base_path+String(options.file_path)}
         );
         this.data(
             'bookmarker',
@@ -269,4 +281,4 @@
             })
         );
     };
-})(window.jQuery, window._, window.Backbone);
+}(window.jQuery, window._, window.Backbone));
