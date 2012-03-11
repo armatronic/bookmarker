@@ -1,4 +1,6 @@
-(function($){
+/*jslint browser: true, unparam: true, vars: true, white: true, nomen: true, maxerr: 50, indent: 4 */
+(function($, _, Backbone){
+    "use strict";
     /**
      * Bookmark model.
      */
@@ -22,7 +24,7 @@
                 label: '',
                 url:   '',
                 tags:  []
-            }
+            };
         },
         is_displayed: true,
         setAsDisplayed: function() {
@@ -47,7 +49,7 @@
         initialize: function(models, options) {
             try {
                 this.file_path   = options.file_path;
-                this.fileStorage = new FileStore(
+                this.fileStorage = new window.FileStore(
                     $.twFile.convertUriToLocalPath(this.file_path)
                 );
             }
@@ -56,7 +58,7 @@
             }
         },
         comparator: function(bookmark) {
-            return bookmark.get('order')
+            return bookmark.get('order');
         },
         nextOrder: function() {
             return this.length + 1;
@@ -84,7 +86,7 @@
 
             //
             // Set the template's contents based on what's in the model.
-            if (this.$el.children().length == 0) {
+            if (this.$el.children().length === 0) {
                 this.$el.html(options.template).removeClass('template').addClass('bookmark');
             }
         },
@@ -214,7 +216,7 @@
             return false;
         },
         addAll: function() {
-            this.collection.each(this.addOne);
+            this.collection.each(this.addOne, this);
         },
         showForTagEvent: function(event) {
             this.addShownTag($(event.target).text());
@@ -255,9 +257,9 @@
             {file_path: 'items.json'},
             options
         );
-        bookmarks = new BookmarkList(
+        var bookmarks = new BookmarkList(
             {},
-            {file_path: document.location.href.replace(/([\///])[^\///]+$/i, '$1'+String(options.file_path))}
+            {file_path: document.location.href.replace(/([\\\/])[^\\\/]+$/i, '$1'+String(options.file_path))}
         );
         this.data(
             'bookmarker',
@@ -267,4 +269,4 @@
             })
         );
     };
-})(jQuery);
+})(window.jQuery, window._, window.Backbone);
