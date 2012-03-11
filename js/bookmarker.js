@@ -72,28 +72,26 @@
          */
         window.BookmarkView = Backbone.View.extend({
             tagName: 'li',
-            template: $('#bookmark_list .bookmark.template').html(),
             events: {
                 'submit .save_form'   : 'saveBookmark',
                 'click .cancel'       : 'cancelEdit',
                 'click .edit'         : 'editBookmark',
                 'click .delete'       : 'deleteBookmark'
             },
-            initialize: function() {
+            initialize: function(options) {
                 this.model.on('change',  this.render, this);
                 this.model.on('destroy', this.remove, this);
                 //
                 // change_display is triggered when a tag is switched on or off.
                 this.model.on('change_display', this.render, this);
-                //
-                // The view is set into the model, so the render() method can
-            },
-            render: function() {
+
                 //
                 // Set the template's contents based on what's in the model.
                 if (this.$el.children().length == 0) {
-                    this.$el.html(this.template).removeClass('template').addClass('bookmark');
+                    this.$el.html(options.template).removeClass('template').addClass('bookmark');
                 }
+            },
+            render: function() {
                 this.$('.display .bookmark_link')
                     .attr('href', this.model.get('url'))
                     .text(this.model.get('label'));
@@ -209,8 +207,8 @@
             },
             addOne: function(bookmark) {
                 var view = new BookmarkView({
-                    model:    bookmark
-//                    ,template: this.$('.bookmark.template').html()
+                    model:    bookmark,
+                    template: this.$('.bookmark.template').html()
                 });
                 if (bookmark.isNew()) {
                     view.editBookmark();
