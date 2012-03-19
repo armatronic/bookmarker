@@ -260,17 +260,18 @@
         // each model in the collection returns the bookmarker view)
         var method  = 'init';
         var options = {};
-        if (arguments.length == 1) {
-            if (_.isObject(arguments[0])) {
-                options = arguments[0];
+        var args    = arguments;
+        if (args.length === 1) {
+            if (_.isObject(args[0])) {
+                options = args[0];
             }
             else {
-                method = arguments[0];
+                method = args[0];
             }
         }
         else if (arguments.length > 2) {
-            method  = arguments[0];
-            options = arguments[1];
+            method  = args[0];
+            options = args[1];
         }
 
         //
@@ -314,6 +315,8 @@
             return this;
         }
         else if (method === 'addBookmark') {
+            this.data('bookmarker').add();
+            return this;
         }
     };
 }(window.jQuery, window._, window.Backbone));
