@@ -18,6 +18,10 @@
                 bookmark_list.bookmarker('addBookmark');
                 return false;
             });
+            window.key('esc', function() {
+                bookmark_list.bookmarker('cancelEdit');
+                return false;
+            });
         });
     });
 }(window.jQuery));

@@ -82,7 +82,8 @@
             this.model.on('destroy', this.remove, this);
             //
             // change_display is triggered when a tag is switched on or off.
-            this.model.on('change_display', this.render, this);
+            this.model.on('change_display', this.render,     this);
+            this.model.on('cancel_edit',    this.cancelEdit, this);
 
             //
             // Set the template's contents based on what's in the model.
@@ -238,6 +239,11 @@
         clearForTag: function(tag) {
             this.shown_tags = _.without(this.shown_tags, tag);
             this.render();
+        },
+        cancelEdit: function() {
+            this.collection.each(function(model) {
+                model.trigger('cancel_edit');
+            });
         }
     });
 
@@ -316,6 +322,10 @@
         }
         else if (method === 'addBookmark') {
             this.data('bookmarker').add();
+            return this;
+        }
+        else if (method === 'cancelEdit') {
+            this.data('bookmarker').cancelEdit();
             return this;
         }
     };
