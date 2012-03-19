@@ -1,0 +1,3 @@
+[submodule "js/libs/keymaster"]
+	path = js/libs/keymaster
+	url = https://github.com/madrobby/keymaster.git
