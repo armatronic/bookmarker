@@ -209,10 +209,10 @@
                 model:    bookmark,
                 template: this.$('.bookmark.template').html()
             });
+            this.$('.bookmarks').append(view.render().el);
             if (bookmark.isNew()) {
                 view.editBookmark();
             }
-            this.$('.bookmarks').append(view.render().el);
             return false;
         },
         addAll: function() {
