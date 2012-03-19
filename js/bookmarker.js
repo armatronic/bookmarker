@@ -209,10 +209,10 @@
                 model:    bookmark,
                 template: this.$('.bookmark.template').html()
             });
+            this.$('.bookmarks').append(view.render().el);
             if (bookmark.isNew()) {
                 view.editBookmark();
             }
-            this.$('.bookmarks').append(view.render().el);
             return false;
         },
         addAll: function() {
@@ -241,44 +241,79 @@
         }
     });
 
+    $.bookmarkerElements = {
+        Bookmark:       Bookmark,
+        BookmarkList:   BookmarkList,
+        BookmarkView:   BookmarkView,
+        BookmarkerView: BookmarkerView
+    };
+
 
     /**
      * A jQuery plugin for setting up the bookmarker.
      */
-    $.fn.bookmarker = function(options) {
+    $.fn.bookmarker = function() {
         //
         // Plugin methods:
         // init
+        // getBookmarkerView (which contains the bookmark collection, and can
+        // each model in the collection returns the bookmarker view)
+        var method  = 'init';
+        var options = {};
+        if (arguments.length == 1) {
+            if (_.isObject(arguments[0])) {
+                options = arguments[0];
+            }
+            else {
+                method = arguments[0];
+            }
+        }
+        else if (arguments.length > 2) {
+            method  = arguments[0];
+            options = arguments[1];
+        }
 
         //
         // Plugin options:
         // file_path
-        $.extend(
-            {file_path: 'items.json'},
-            options
-        );
+        if (method === 'init') {
+            $.extend(
+                {file_path: 'items.json'},
+                options
+            );
 
-        //
-        // Split the doc location into paths, and treat options.file_path as
-        // relative.
-        // If location is a file and not a directory, then treat file path as
-        // relative to the directory the document location is in.
-        var this_path_parts = document.location.href.split(/([\\\/]+)/i);
-        var last_part       = _.last(this_path_parts);
-        if (!last_part.match(/\\\//)) {
-            this_path_parts = _.initial(this_path_parts);
+            //
+            // Split the doc location into paths, and treat options.file_path as
+            // relative.
+            // If location is a file and not a directory, then treat file path as
+            // relative to the directory the document location is in.
+            var this_path_parts = document.location.href.split(/([\\\/]+)/i);
+            var last_part       = _.last(this_path_parts);
+            if (!last_part.match(/\\\//)) {
+                this_path_parts = _.initial(this_path_parts);
+            }
+            var base_path = this_path_parts.join('');
+            var bookmarks = new BookmarkList(
+                {},
+                {file_path: base_path+String(options.file_path)}
+            );
+            this.data(
+                'bookmarker',
+                new BookmarkerView({
+                    el:         this,
+                    collection: bookmarks
+                })
+            );
+            return this;
         }
-        var base_path = this_path_parts.join('');
-        var bookmarks = new BookmarkList(
-            {},
-            {file_path: base_path+String(options.file_path)}
-        );
-        this.data(
-            'bookmarker',
-            new BookmarkerView({
-                el:         this,
-                collection: bookmarks
-            })
-        );
+        else if (method === 'getBookmarker') {
+            return this.data('bookmarker');
+        }
+        else if (method === 'destroy') {
+            this.data('bookmarker').remove();
+            return this;
+        }
+        else if (method === 'addBookmark') {
+        }
     };
 }(window.jQuery, window._, window.Backbone));
