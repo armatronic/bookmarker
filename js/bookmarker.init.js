@@ -13,9 +13,10 @@
                 file_path: 'items.json'
             });
             //
-            // Keyboard shortcuts
+            // Keyboard shortcuts.
             window.key('n', function() {
-                bookmark_list.bookmarker('add');
+                bookmark_list.bookmarker('addBookmark');
+                return false;
             });
         });
     });
