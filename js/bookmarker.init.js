@@ -18,6 +18,9 @@
                 bookmark_list.bookmarker('addBookmark');
                 return false;
             });
+            //
+            // Doesn't trigger when focus is on an element - there is a keypress
+            // event in the bookmarker itself which handles that.
             window.key('esc', function() {
                 bookmark_list.bookmarker('cancelEdit');
                 return false;

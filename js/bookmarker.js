@@ -75,7 +75,8 @@
             'submit .save_form'   : 'saveBookmark',
             'click .cancel'       : 'cancelEdit',
             'click .edit'         : 'editBookmark',
-            'click .delete'       : 'deleteBookmark'
+            'click .delete'       : 'deleteBookmark',
+            'keydown'             : 'handleKeydown'
         },
         initialize: function(options) {
             this.model.on('change',  this.render, this);
@@ -151,6 +152,13 @@
             this.remove();
             this.model.destroy();
             return false;
+        },
+        handleKeydown: function(event) {
+            //
+            // if ESC is pressed, then cancel edit.
+            if (event.keyCode === 27) {
+                this.cancelEdit();
+            }
         }
     });
 
@@ -311,22 +319,19 @@
                     collection: bookmarks
                 })
             );
-            return this;
         }
         else if (method === 'getBookmarker') {
             return this.data('bookmarker');
         }
         else if (method === 'destroy') {
             this.data('bookmarker').remove();
-            return this;
         }
         else if (method === 'addBookmark') {
             this.data('bookmarker').add();
-            return this;
         }
         else if (method === 'cancelEdit') {
             this.data('bookmarker').cancelEdit();
-            return this;
         }
+        return this;
     };
 }(window.jQuery, window._, window.Backbone));
