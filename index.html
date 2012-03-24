@@ -3,6 +3,7 @@
     <head>
         <title>Bookmarker</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link type="text/css" href="js/libs/jquery-tags/jquery.tagsinput.css" rel="stylesheet" />
         <link type="text/css" href="css/styles.css" rel="stylesheet" />
     </head>
     <body>
@@ -16,8 +17,7 @@
                 <span class="current_tag_container">
                     <a href="#" class="button shown_tag template" title="Remove this tag from filter"></a>
                 </span>
-                <input type="text" class="tag_selector autocomplete" name="selected_tag" />
-                <!--<input type="submit" value="Add" class="button add" />-->
+                <input type="text" id="tag_selector" class="tag_selector autocomplete" name="selected_tag" />
             </form>
 
             <a href="#" class="button add">Add Bookmark</a>
@@ -57,6 +57,7 @@
 
         <script type="text/javascript" src="js/libs/jquery-1.7.1.js"></script>
         <script type="text/javascript" src="js/libs/jquery.twfile.js"></script>
+        <script type="text/javascript" src="js/libs/jquery-tags/jquery.tagsinput.js"></script>
         <script type="text/javascript" src="js/libs/underscore-1.3.1.js"></script>
         <script type="text/javascript" src="js/libs/json2.js"></script>
         <script type="text/javascript" src="js/libs/backbone-0.9.1.js"></script>
