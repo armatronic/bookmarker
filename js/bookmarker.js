@@ -112,7 +112,15 @@
             this.$('.display .tags').append(tag_links);
             this.$('.label_input :input').val(this.model.get('label'));
             this.$('.url_input :input').val(this.model.get('url'));
-            this.$('.tag_input :input').val(tags.join(' '));
+
+            var tag_input = this.$('.tag_input :input[name="tags"]');
+            tag_input.val(tags.join(' '));
+            if (_.isUndefined(tag_input.attr('id'))) {
+                //
+                // The tag selector requires an ID to work. Any ID, doesn't
+                // matter what.
+                tag_input.attr('id', _.uniqueId('tag_input_'));
+            }
             if (this.model.isHidden()) {
                 this.$el.hide();
             }
@@ -197,6 +205,10 @@
             tag_container.children().not('.template').remove();
             tag_container.append(tag_links);
 
+            this.$('.tag_selector').tagsInput({ 
+                delimiter: ' ' 
+            });
+
             //
             // Set whether a post is shown based on the shown tags.
             var shown_tags = this.shown_tags;
@@ -218,7 +230,13 @@
                 model:    bookmark,
                 template: this.$('.bookmark.template').html()
             });
-            this.$('.bookmarks').append(view.render().el);
+            var bookmark_output = view.render().el;
+            this.$('.bookmarks').append(bookmark_output);
+            //
+            // And set up the tag input on the bookmark.
+            $(bookmark_output).find('.tag_input :input').tagsInput({
+                delimiter: ' '
+            });
             if (bookmark.isNew()) {
                 view.editBookmark();
             }
