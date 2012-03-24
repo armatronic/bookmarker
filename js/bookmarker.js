@@ -205,21 +205,36 @@
             tag_container.children().not('.template').remove();
             tag_container.append(tag_links);
 
-            this.$('.tag_selector').tagsInput({ 
-                delimiter: ' ' 
+            var self = this;
+            this.tag_selector = this.$('.tag_selector').tagsInput({
+                delimiter: ' ',
+                onChange: function() {
+                    self.collection.each(function(bookmark) {
+                        if (_.isEmpty(self.shown_tags) || !_.isEmpty(_.intersection(self.shown_tags, bookmark.get('tags')))) {
+                            bookmark.setAsDisplayed();
+                        }
+                        else {
+                            bookmark.setAsHidden();
+                        }
+                    });
+                },
+                onAddTag: function(tag) {
+                    self.addShownTag(tag);
+                },
+                onRemoveTag: function(tag) {
+                    self.clearForTag(tag);
+                }
             });
 
+            this.updateShownTags();
+        },
+        updateShownTags: function() {
             //
-            // Set whether a post is shown based on the shown tags.
+            // Set whether a bookmark is shown based on the shown tags.
             var shown_tags = this.shown_tags;
-            this.collection.each(function(bookmark) {
-                if (_.isEmpty(shown_tags) || !_.isEmpty(_.intersection(shown_tags, bookmark.get('tags')))) {
-                    bookmark.setAsDisplayed();
-                }
-                else {
-                    bookmark.setAsHidden();
-                }
-            });
+            //
+            // And update the tags shown in the tags input.
+            this.tag_selector.importTags(shown_tags.join(' '));
         },
         add: function() {
             this.collection.add({});
@@ -254,17 +269,19 @@
             return false;
         },
         clearAllShownTags: function() {
+            this.shown_tags = [];
+            this.updateShownTags();
             return false;
         },
         addShownTag: function(tag) {
             if (!_.contains(this.shown_tags, tag)) {
                 this.shown_tags.push(tag);
             }
-            this.render();
+            this.updateShownTags();
         },
         clearForTag: function(tag) {
             this.shown_tags = _.without(this.shown_tags, tag);
-            this.render();
+            this.updateShownTags();
         },
         cancelEdit: function() {
             this.collection.each(function(model) {
