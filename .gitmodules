@@ -1,3 +1,6 @@
 [submodule "js/libs/keymaster"]
 	path = js/libs/keymaster
 	url = https://github.com/madrobby/keymaster.git
+[submodule "js/libs/jquery-tags"]
+	path = js/libs/jquery-tags
+	url = https://github.com/xoxco/jQuery-Tags-Input.git
