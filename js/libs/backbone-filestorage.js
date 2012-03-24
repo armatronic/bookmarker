@@ -27,10 +27,10 @@ _.extend(FileStore.prototype, {
   save: function() {
       //
       // TiddlySaver may load a whole bunch of crap at the end of the data file
-      // if it's below a certain length (about 140 chars?)
+      // if it's below a certain length, testing says about 250 chars.
       // Work around by padding to that length.
       var data = JSON.stringify(this.data);
-      var min_length = 150;
+      var min_length = 260;
       if (data.length < min_length) {
         data = Array(min_length-data.length).join(' ') + data;
       }
