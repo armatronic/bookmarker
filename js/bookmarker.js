@@ -219,6 +219,12 @@
                 onRemoveTag: function(tag) {
                     self.shown_tags = _.without(self.shown_tags, tag);
                     onChange();
+                },
+                autocomplete_url: _.bind(this.tagAutocompleteSource, this),
+                autocomplete: {
+//                    selectFirst:true,
+//                    width:'100px',
+//                    autoFill:true
                 }
             });
         },
@@ -232,6 +238,19 @@
                     bookmark.setAsHidden();
                 }
             });
+        },
+        tagAutocompleteSource: function(request, response) {
+            //
+            // Get every tag from every item in the collection.
+            var results = [];
+            this.collection.each(function(bookmark) {
+                _.each(bookmark.get('tags'), function(tag) {
+                    if (tag.indexOf(request.term) === 0) {
+                        results.push(tag);
+                    }
+                });
+            });
+            response(results);
         },
         add: function() {
             this.collection.add({});
@@ -247,7 +266,8 @@
             //
             // And set up the tag input on the bookmark.
             $(bookmark_output).find('.tag_input :input').tagsInput({
-                delimiter: ' '
+                delimiter: ' ',
+                autocomplete_url: _.bind(this.tagAutocompleteSource, this)
             });
             if (bookmark.isNew()) {
                 view.editBookmark();
