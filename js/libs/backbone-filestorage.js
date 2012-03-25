@@ -18,7 +18,33 @@ var guid = function() {
 var FileStore = function(path) {
     this.path = path;
     var store = $.twFile.load(this.path);
-    this.data = (store && JSON.parse(store)) || {};
+    var data  = {};
+
+    //
+    // Keep on trying to parse JSON, by stripping garbage chars off the end.
+    var keep_going = true;
+    var loops      = 0;
+    while (keep_going) {
+        try {
+            data       = JSON.parse(store);
+            keep_going = false;
+        }
+        catch (ex) {
+            //
+            // JSON couldn't parse, so strip away garbage at end.
+            var last_close = store.lastIndexOf('}');
+            if (last_close < 0) {
+                keep_going = false;
+            }
+            else {
+                store = store.substr(0, last_close+1);
+            }
+        }
+        if (loops++ > 1000) {
+            keep_going = false;
+        }
+    }
+    this.data = data;
 };
 
 _.extend(FileStore.prototype, {
