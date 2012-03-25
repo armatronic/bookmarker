@@ -245,7 +245,7 @@
             var results = [];
             this.collection.each(function(bookmark) {
                 _.each(bookmark.get('tags'), function(tag) {
-                    if (tag.indexOf(request.term) === 0 && results.indexOf(request.term) === -1) {
+                    if (tag.indexOf(request.term) === 0 && results.indexOf(tag) === -1) {
                         results.push(tag);
                     }
                 });
