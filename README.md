@@ -19,11 +19,12 @@ should be okay, as file system access libraries are built into these browsers.
 
 Chrome/Chromium uses a Java applet to work, and may have issues depending on
 the version of the Java plugin that is used. The Sun/Oracle Java plugin is known
-to work, the OpenJDK plugin (usually available from Ubuntu) is known to have
-problems (especially with short string values, such as an encoding string or a
-small repository - see
+to work, the OpenJDK IcedTea plugin (usually available from Ubuntu) is known to
+add garbage chars to the end of strings (especially short string values, such as
+an encoding string or a small list of bookmarks - see
 [http://code.google.com/p/chromium/issues/detail?id=111448](http://code.google.com/p/chromium/issues/detail?id=111448)).
-For now, these issues are able to be worked around.
+For now, I've hacked a workaround into the file storage engine which attempts to
+strip these garbage chars off the end.
 
 At any rate, either Chrome or Chromium may need to be started with the
 "--enable-file-cookies" and "--allow-file-access-from-files" command line
