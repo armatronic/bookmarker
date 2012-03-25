@@ -25,16 +25,7 @@ _.extend(FileStore.prototype, {
 
   // Save the current state of the **Store** to *localStorage*.
   save: function() {
-      //
-      // TiddlySaver may load a whole bunch of crap at the end of the data file
-      // if it's below a certain length, testing says about 250 chars.
-      // Work around by padding to that length.
-      var data = JSON.stringify(this.data);
-      var min_length = 260;
-      if (data.length < min_length) {
-        data = Array(min_length-data.length).join(' ') + data;
-      }
-      $.twFile.save(this.path, data);
+      $.twFile.save(this.path, JSON.stringify(this.data));
   },
 
   // Add a model, giving it a (hopefully)-unique GUID, if it doesn't already
