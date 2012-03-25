@@ -245,12 +245,12 @@
             var results = [];
             this.collection.each(function(bookmark) {
                 _.each(bookmark.get('tags'), function(tag) {
-                    if (tag.indexOf(request.term) === 0) {
+                    if (tag.indexOf(request.term) === 0 && results.indexOf(request.term) === -1) {
                         results.push(tag);
                     }
                 });
             });
-            response(results);
+            response(results.sort());
         },
         add: function() {
             this.collection.add({});
