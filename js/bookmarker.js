@@ -186,6 +186,10 @@
             this.collection.on('add',   this.addOne, this);
             this.collection.on('reset', this.addAll, this);
             this.collection.fetch();
+            this.default_tag_selector_options = {
+                delimiter: ' ',
+                autocomplete_url: _.bind(this.tagAutocompleteSource, this)
+            };
             this.render();
         },
         render: function() {
@@ -209,24 +213,20 @@
             // Set up events for bookmarker tags.
             var self     = this;
             var onChange = _.bind(this.onTagChangeEvent, this);
-            this.tag_selector = this.$('.tag_selector').tagsInput({
-                delimiter: ' ',
-                onChange: onChange,
-                onAddTag: function(tag) {
-                    self.shown_tags.push(tag);
-                    onChange();
-                },
-                onRemoveTag: function(tag) {
-                    self.shown_tags = _.without(self.shown_tags, tag);
-                    onChange();
-                },
-                autocomplete_url: _.bind(this.tagAutocompleteSource, this),
-                autocomplete: {
-//                    selectFirst:true,
-//                    width:'100px',
-//                    autoFill:true
+            var tag_selector_options = _.extend(
+                {}, this.default_tag_selector_options, {
+                    onChange: onChange,
+                    onAddTag: function(tag) {
+                        self.shown_tags.push(tag);
+                        onChange();
+                    },
+                    onRemoveTag: function(tag) {
+                        self.shown_tags = _.without(self.shown_tags, tag);
+                        onChange();
+                    }
                 }
-            });
+            );
+            this.tag_selector = this.$('.tag_selector').tagsInput(tag_selector_options);
         },
         onTagChangeEvent: function() {
             var self = this;
@@ -265,10 +265,9 @@
             this.$('.bookmarks').append(bookmark_output);
             //
             // And set up the tag input on the bookmark.
-            $(bookmark_output).find('.tag_input :input').tagsInput({
-                delimiter: ' ',
-                autocomplete_url: _.bind(this.tagAutocompleteSource, this)
-            });
+            $(bookmark_output).find('.tag_input :input').tagsInput(
+                this.default_tag_selector_options
+            );
             if (bookmark.isNew()) {
                 view.editBookmark();
             }
