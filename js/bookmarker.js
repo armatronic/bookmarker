@@ -213,19 +213,19 @@
             // Set up events for bookmarker tags.
             var self     = this;
             var onChange = _.bind(this.onTagChangeEvent, this);
-            var tag_selector_options = _.extend(
-                {}, this.default_tag_selector_options, {
-                    onChange: onChange,
-                    onAddTag: function(tag) {
-                        self.shown_tags.push(tag);
-                        onChange();
-                    },
-                    onRemoveTag: function(tag) {
-                        self.shown_tags = _.without(self.shown_tags, tag);
-                        onChange();
-                    }
+            var tag_selector_options = {
+                delimiter: ' ',
+                autocomplete_url: _.bind(this.tagAutocompleteSource, this),
+                onChange: onChange,
+                onAddTag: function(tag) {
+                    self.shown_tags.push(tag);
+                    onChange();
+                },
+                onRemoveTag: function(tag) {
+                    self.shown_tags = _.without(self.shown_tags, tag);
+                    onChange();
                 }
-            );
+            };
             this.tag_selector = this.$('.tag_selector').tagsInput(tag_selector_options);
         },
         onTagChangeEvent: function() {
@@ -265,9 +265,10 @@
             this.$('.bookmarks').append(bookmark_output);
             //
             // And set up the tag input on the bookmark.
-            $(bookmark_output).find('.tag_input :input').tagsInput(
-                this.default_tag_selector_options
-            );
+            $(bookmark_output).find('.tag_input :input').tagsInput({
+                delimiter: ' ',
+                autocomplete_url: _.bind(this.tagAutocompleteSource, this)
+            });
             if (bookmark.isNew()) {
                 view.editBookmark();
             }
