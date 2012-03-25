@@ -205,36 +205,33 @@
             tag_container.children().not('.template').remove();
             tag_container.append(tag_links);
 
-            var self = this;
+            //
+            // Set up events for bookmarker tags.
+            var self     = this;
+            var onChange = _.bind(this.onTagChangeEvent, this);
             this.tag_selector = this.$('.tag_selector').tagsInput({
                 delimiter: ' ',
-                onChange: function() {
-                    self.collection.each(function(bookmark) {
-                        if (_.isEmpty(self.shown_tags) || !_.isEmpty(_.intersection(self.shown_tags, bookmark.get('tags')))) {
-                            bookmark.setAsDisplayed();
-                        }
-                        else {
-                            bookmark.setAsHidden();
-                        }
-                    });
-                },
+                onChange: onChange,
                 onAddTag: function(tag) {
-                    self.addShownTag(tag);
+                    self.shown_tags.push(tag);
+                    onChange();
                 },
                 onRemoveTag: function(tag) {
-                    self.clearForTag(tag);
+                    self.shown_tags = _.without(self.shown_tags, tag);
+                    onChange();
                 }
             });
-
-            this.updateShownTags();
         },
-        updateShownTags: function() {
-            //
-            // Set whether a bookmark is shown based on the shown tags.
-            var shown_tags = this.shown_tags;
-            //
-            // And update the tags shown in the tags input.
-            this.tag_selector.importTags(shown_tags.join(' '));
+        onTagChangeEvent: function() {
+            var self = this;
+            this.collection.each(function(bookmark) {
+                if (_.isEmpty(self.shown_tags) || !_.isEmpty(_.intersection(self.shown_tags, bookmark.get('tags')))) {
+                    bookmark.setAsDisplayed();
+                }
+                else {
+                    bookmark.setAsHidden();
+                }
+            });
         },
         add: function() {
             this.collection.add({});
@@ -269,19 +266,16 @@
             return false;
         },
         clearAllShownTags: function() {
-            this.shown_tags = [];
-            this.updateShownTags();
+            this.tag_selector.importTags('');
             return false;
         },
         addShownTag: function(tag) {
-            if (!_.contains(this.shown_tags, tag)) {
-                this.shown_tags.push(tag);
+            if (!(this.tag_selector.tagExist(tag))) {
+                this.tag_selector.addTag(tag);
             }
-            this.updateShownTags();
         },
         clearForTag: function(tag) {
-            this.shown_tags = _.without(this.shown_tags, tag);
-            this.updateShownTags();
+            this.tag_selector.removeTag(tag);
         },
         cancelEdit: function() {
             this.collection.each(function(model) {
