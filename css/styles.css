@@ -21,22 +21,40 @@ body {
 
 #bookmark_list .bookmarks {
     padding: 0;
+/*    display: table;*/
+/*    width: 100%;*/
 }
 #bookmark_list .bookmark {
     list-style-type: none;
     padding: 3px;
     background-color: #FFFDFA;
     border: 1px solid #EFEDEA;
-    display: inline-block;
+    display: block;
     margin: 3px;
     border-radius: 10px;
     vertical-align: top;
+}
+#bookmark_list .bookmark .display .column {
+    display: inline-block;
+/*    display: table-cell;*/
+}
+#bookmark_list .bookmark .display .column.link {
+    width: 49%;
+}
+#bookmark_list .bookmark .display .column.tags {
+    width: 30%;
+    text-align: right;
+}
+#bookmark_list .bookmark .display .column.actions {
+    width: 20%;
+    text-align: right;
 }
 #bookmark_list .bookmark.template {
     display: none;
 }
 #bookmark_list .bookmark .display {
     display: inherit;
+/*    display: table-row;*/
 }
 #bookmark_list .bookmark.editing .display {
     display: none;
